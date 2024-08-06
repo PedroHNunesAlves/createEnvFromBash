@@ -18,19 +18,20 @@ jobs:
 
   approval:
     runs-on: ubuntu-latest
-    needs: build  
+    needs: build  # Esse job será executado após o job "build" ser concluído
 
     steps:
       - name: Wait for manual approval
-        uses: macnev2013/manual-approval@latest
+        uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: PedroHNunesAlves
+          approvers: user1,user2,org-team1
           minimum-approvals: 1
-          approval-wait: 600
-          issue-title: 'Aprovação Manual Necessária'
-          issue-body: |
-            "Por favor, aprove ou negue este workflow. A aprovação é necessária para continuar."
+          issue-title: "Deploying v1.3.5 to prod from staging"
+          issue-body: "Please approve or deny the deployment of version v1.3.5."
+          exclude-workflow-initiator-as-approver: false
+          additional-approved-words: ''
+          additional-denied-words: ''
 
       - name: Echo after approval
-        run: echo "Aprovação manual concluída. O fluxo de trabalho continuará agora."
+        run: echo "Manual approval completed. The workflow will continue now."
