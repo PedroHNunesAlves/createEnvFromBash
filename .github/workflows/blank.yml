@@ -1,0 +1,21 @@
+name: Simple Pipeline with Manual Approval
+
+on:
+  workflow_dispatch:
+
+jobs:
+  simple-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Cachorro
+        run: echo "cachorro"
+      
+      - name: Awaiting Approval
+        id: approval
+        uses: peter-evans/enable-pending-check@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Echo Gato
+        run: echo "gato"
+        if: steps.approval.outputs.approved == 'true'
