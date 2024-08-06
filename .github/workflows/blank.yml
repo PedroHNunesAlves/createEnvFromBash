@@ -25,7 +25,7 @@ jobs:
         uses: macnev2013/manual-approval@latest
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: user1,user2
+          approvers: PedroHNunesAlves
           minimum-approvals: 1
           approval-wait: 600
           issue-title: 'Aprovação Manual Necessária'
