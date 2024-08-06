@@ -1,21 +1,26 @@
-name: Simple Pipeline with Manual Approval
+name: Manual Approval Pipeline
 
 on:
   workflow_dispatch:
 
 jobs:
-  simple-pipeline:
+  approval-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Echo Cachorro
-        run: echo "cachorro"
-      
-      - name: Awaiting Approval
-        id: approval
-        uses: peter-evans/enable-pending-check@v2
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Echo Gato
-        run: echo "gato"
-        if: steps.approval.outputs.approved == 'true'
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ steps.generate_token.outputs.token }}
+          approvers: myteam
+          minimum-approvals: 1
+
+      - name: Proceed after approval
+        run: echo "Approval received. Proceeding with the workflow."
+        if: ${{ steps.wait_for_approval.outputs.approved == 'true' }}
