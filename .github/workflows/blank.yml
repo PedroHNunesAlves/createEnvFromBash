@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  issues: write  # Adiciona permissão para criar e gerenciar issues
+
 jobs:
   build:
     runs-on: ubuntu-latest
